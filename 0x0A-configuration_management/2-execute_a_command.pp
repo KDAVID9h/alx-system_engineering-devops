@@ -3,4 +3,3 @@ exec { 'kill_process':
   path        => ['/usr/bin', '/bin'],  # Specify the path if necessary
   refreshonly => true,  # Only execute the command when notified
 }
-
