@@ -4,11 +4,34 @@ import requests
 import sys
 
 if __name__ == "__main__":
-    url = 'https://jsonplaceholder.typicode.com/'
-    user = requests.get(url + 'users/{}'.format(sys.argv[1])).json()
-    todos = requests.get(url + 'todos', params={"userId": sys.argv[1]}).json()
+	if len(sys.argv) != 2:
+		print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
+		sys.exit(1)
 
-    completed = [todo for todo in todos if todo.get("completed") is True]
-    print('Employee {} is done with tasks({}/{}):'.format(
-        user.get("name"), len(completed), len(todos)))
-    [print('\t {}'.format(c.get("title"))) for c in completed]
+	try:
+		employee_id = int(sys.argv[1])
+	except ValueError:
+		print("L'ID de l'employé doit être un entier.")
+		sys.exit(1)
+
+	url = 'https://jsonplaceholder.typicode.com/'
+	
+	# Récupérer les données de l'utilisateur
+	user_response = requests.get(f"{url}users/{employee_id}")
+	if user_response.status_code != 200:
+		print("Utilisateur non trouvé.")
+		sys.exit(1)
+	user = user_response.json()
+	
+	# Récupérer les tâches TODO de l'utilisateur
+	todos_response = requests.get(f"{url}todos", params={"userId": employee_id})
+	if todos_response.status_code != 200:
+		print("Impossible de récupérer les tâches.")
+		sys.exit(1)
+	todos = todos_response.json()
+
+	# Filtrer les tâches terminées
+	completed = [todo for todo in todos if todo.get("completed") is True]
+	print(f"Employee {user.get('name')} is done with tasks({len(completed)}/{len(todos)}):")
+	for task in completed:
+		print(f"\t {task.get('title')}")
