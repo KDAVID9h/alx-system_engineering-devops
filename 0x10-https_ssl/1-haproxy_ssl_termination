@@ -44,8 +44,8 @@ listen hkde
 	option http-server-close
 	option httpclose
 	option forwardfor
-	server 514915-web-01 3.84.239.133:80 check
-	server 514915-web-02 54.146.80.134:80 check
+	server 514915-web-01 18.204.11.243:80 check
+	server 514915-web-02 100.25.37.105:80 check
 
 frontend www-http
 	bind *:80
